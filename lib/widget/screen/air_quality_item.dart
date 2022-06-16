@@ -1,4 +1,4 @@
-import 'package:app_datn_2022/bloc/bloc/value_bloc.dart';
+import 'package:app_datn_2022/bloc/value/value_bloc.dart';
 import 'package:app_datn_2022/widget/custom_curve_painter.dart';
 import 'package:flutter/material.dart';
 

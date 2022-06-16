@@ -1,6 +1,8 @@
 
+import 'package:app_datn_2022/bloc/countries/countries_bloc.dart';
 import 'package:app_datn_2022/screen/aqi_world.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({Key? key}) : super(key: key);
@@ -24,13 +26,14 @@ class _ScreenHomeState extends State<ScreenHome> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: SafeArea(
-        child: Row(
-          children: const [
-            SizedBox(width: 15,),
-            AqiWorld(),
-          ],
-        ),
+      body: BlocConsumer<CountriesBloc, CountriesState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+         if(state is CountriesLoaded) {
+           return AqiWorld();
+         }
+         return SizedBox();
+        },
       ),
     );
   }

@@ -1,0 +1,2 @@
+const String baseCountries = "http://api.airvisual.com/v2/countries?key=3723e30a-2969-477c-a363-23516574d674";
+const String baseStates = "http://api.airvisual.com/v2/states?country=VietNam&key=3723e30a-2969-477c-a363-23516574d674";
