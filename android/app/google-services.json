@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "436199523200",
+    "firebase_url": "https://datn-kmt-default-rtdb.firebaseio.com",
+    "project_id": "datn-kmt",
+    "storage_bucket": "datn-kmt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436199523200:android:ecbf5e2e653d5f9de5b765",
+        "android_client_info": {
+          "package_name": "com.example.app_datn_2022"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "436199523200-ccqotan57su8bl73a31hun41c6tccmcl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmORLolH1RX-yAd06pTrJXJJX-UjyRsEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "436199523200-ccqotan57su8bl73a31hun41c6tccmcl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "436199523200-22cfnqlbo485u338knf1nb6kkjaio1h8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartHomePageUi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
