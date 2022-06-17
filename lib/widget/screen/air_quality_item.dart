@@ -1,19 +1,27 @@
 import 'package:app_datn_2022/bloc/value/value_bloc.dart';
+import 'package:app_datn_2022/extension/to_name.dart';
+import 'package:app_datn_2022/model/aqi_datn.dart' as TripleH;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 
 class AirQualityItem extends StatefulWidget {
+
   const AirQualityItem({
     Key? key,
+    this.condition,
   }) : super(key: key);
+
+  final TripleH.aqiDATN? condition;
 
   @override
   State<AirQualityItem> createState() => _AirQualityItemState();
 }
 
+
 class _AirQualityItemState extends State<AirQualityItem> {
   ValueBloc valueBloc = ValueBloc();
   final primaryColor = const Color(0xFFE0E0E0);
+  int value = 55;
 
   @override
   void initState() {
@@ -25,7 +33,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _header(),
+        _header(widget.condition),
         const SizedBox(
           height: 40,
         ),
@@ -35,10 +43,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
             const SizedBox(
               width: 20,
             ),
-            _weather(
-              'assets/images/50d.png',
-              20
-            ),
+            _weather('assets/images/50d.png', 20),
             const SizedBox(
               width: 10,
             ),
@@ -110,7 +115,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 
-  Row _header() {
+  Row _header(TripleH.aqiDATN? condition) {
     return Row(
       children: [
         const SizedBox(
@@ -120,11 +125,14 @@ class _AirQualityItemState extends State<AirQualityItem> {
           height: 150,
           width: 380,
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+            color: TripleH.aqiDATN.initializeFromRange(range: 105).color,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Row(
             children: [
-              const Image(
-                image: AssetImage('assets/images/1.png'),
+              const SizedBox(width: 30,),
+              Image(
+                image: AssetImage(TripleH.aqiDATN.initializeFromRange(range: 105).pathAvatar.toString()),
                 height: 120,
                 width: 120,
               ),
@@ -135,7 +143,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
               const SizedBox(
                 width: 50,
               ),
-              _status()
+              _status(condition)
             ],
           ),
         ),
@@ -143,29 +151,32 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 
-  Text _status() {
-    return const Text(
-      'Trung bình',
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  Text _status(TripleH.aqiDATN? conditionDATN) {
+
+
+
+    return Text(
+      TripleH.aqiDATN.initializeFromRange(range: 50).state.getName,
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
 
   Column _value() {
     return Column(
-      children: const [
-        SizedBox(
+      children: [
+        const SizedBox(
           height: 30,
         ),
         Text(
-          '55',
-          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+          value.toString(),
+          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
-        Text(
+        const Text(
           'AQI',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 25,
           ),
         ),
@@ -230,3 +241,4 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 }
+
