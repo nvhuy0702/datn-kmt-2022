@@ -27,7 +27,7 @@ class _ScreenPlaceState extends State<ScreenPlace> {
             width: MediaQuery.of(context).size.width,
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 6,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   return _item(index);
                 }),
@@ -40,15 +40,11 @@ class _ScreenPlaceState extends State<ScreenPlace> {
       children: [
         const SizedBox(height: 20,),
         Row(
-          children: [
-            const SizedBox(
+          children: const [
+            SizedBox(
               width: 15,
             ),
-            AirQualityItem(
-              location: 'HCM',
-              color: statusAir[index].color,
-              status: statusAir[index].status,
-            ),
+            AirQualityItem(),
           ],
         ),
       ],

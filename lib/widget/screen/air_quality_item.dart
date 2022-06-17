@@ -1,18 +1,11 @@
 import 'package:app_datn_2022/bloc/value/value_bloc.dart';
-import 'package:app_datn_2022/widget/custom_curve_painter.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 
 class AirQualityItem extends StatefulWidget {
-  final String location;
-  final Color color;
-  final String status;
-
-  const AirQualityItem(
-      {Key? key,
-      required this.location,
-      required this.color,
-      required this.status})
-      : super(key: key);
+  const AirQualityItem({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AirQualityItem> createState() => _AirQualityItemState();
@@ -20,6 +13,7 @@ class AirQualityItem extends StatefulWidget {
 
 class _AirQualityItemState extends State<AirQualityItem> {
   ValueBloc valueBloc = ValueBloc();
+  final primaryColor = const Color(0xFFE0E0E0);
 
   @override
   void initState() {
@@ -29,160 +23,210 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      width: 345,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey)),
-      child: Stack(
-        children: [
-          ClipPath(
-            clipper: CustomShapeClass(),
-            child: Container(
-              color: widget.color,
+    return Column(
+      children: [
+        _header(),
+        const SizedBox(
+          height: 40,
+        ),
+        Row(
+          children: [
+            _weather('assets/images/02d.png', 30),
+            const SizedBox(
+              width: 20,
             ),
+            _weather(
+              'assets/images/50d.png',
+              20
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        _parameter(),
+      ],
+    );
+  }
+
+  Container _weather(String image, double valueWeather) {
+    return Container(
+      width: 140,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: primaryColor,
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(-20, -20),
+            blurRadius: 60,
+            color: Colors.white,
+            inset: true,
           ),
-          Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              _location(),
-              const SizedBox(
-                height: 15,
-              ),
-              _divider(),
-              _status(),
-              const SizedBox(
-                height: 10,
-              ),
-              buildRow(),
-              const SizedBox(
-                height: 30,
-              ),
-              _divider()
-            ],
+          BoxShadow(
+              offset: Offset(3, 4), blurRadius: 10, color: Color(0xFFBEBEBE))
+        ],
+      ),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 10,
           ),
+          Image(image: AssetImage(image)),
+          const SizedBox(
+            width: 10,
+          ),
+          Text('${valueWeather.toString()} °C')
         ],
       ),
     );
   }
 
-  Widget buildRow() {
+  Widget _parameter() {
     return StreamBuilder(
-        stream: valueBloc.streamValue,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const SizedBox();
-
-          final data = snapshot.data as List<int>;
-          return Row(
+      stream: valueBloc.streamValue,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox();
+        final data = snapshot.data as List<int>;
+        return SizedBox(
+          height: 150,
+          width: MediaQuery.of(context).size.width - 32,
+          child: Wrap(
+            spacing: 30,
+            runSpacing: 20,
+            alignment: WrapAlignment.center,
             children: [
-              const SizedBox(
-                width: 20,
-              ),
-              _parameter(data[0].toString(), 'AQI', widget.color),
-              const SizedBox(
-                width: 20,
-              ),
-              _vertical(),
-              const SizedBox(
-                width: 20,
-              ),
-              _parameter(data[1].toString(), 'PM10', widget.color),
-              const SizedBox(
-                width: 20,
-              ),
-              _vertical(),
-              const SizedBox(
-                width: 20,
-              ),
-              _parameter(data[2].toString(), 'PM2.5', widget.color),
-              const SizedBox(
-                width: 20,
-              ),
-              _vertical(),
-              const SizedBox(
-                width: 20,
-              ),
-              _parameter(data[3].toString(), 'CO2', widget.color),
-              const SizedBox(
-                width: 20,
-              ),
+              _item('T', data[0].toDouble()),
+              _item('CO2', data[1].toDouble()),
+              _item('UV', data[2].toDouble()),
+              _item('CO', data[3].toDouble()),
             ],
-          );
-        });
-  }
-
-  Container _vertical() {
-    return Container(
-      height: 30,
-      width: 1,
-      color: Colors.grey,
+          ),
+        );
+      },
     );
   }
 
-  Column _parameter(String value, String element, Color? color) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-              color: color, fontWeight: FontWeight.bold, fontSize: 17),
-        ),
-        Text(
-          element,
-          style: TextStyle(color: color, fontSize: 17),
-        )
-      ],
-    );
-  }
-
-  Column _status() {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 15,
-        ),
-        const Text(
-          'Không khí',
-          style: TextStyle(fontSize: 17, color: Colors.white),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          widget.status,
-          style: const TextStyle(
-              fontSize: 29, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
-  Container _divider() {
-    return Container(
-      width: 345,
-      height: 1,
-      color: Colors.grey,
-    );
-  }
-
-  Row _location() {
+  Row _header() {
     return Row(
       children: [
         const SizedBox(
-          width: 150,
+          width: 4,
         ),
-        Text(
-          widget.location,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
+        Container(
+          height: 150,
+          width: 380,
+          decoration: BoxDecoration(
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            children: [
+              const Image(
+                image: AssetImage('assets/images/1.png'),
+                height: 120,
+                width: 120,
+              ),
+              const SizedBox(
+                width: 40,
+              ),
+              _value(),
+              const SizedBox(
+                width: 50,
+              ),
+              _status()
+            ],
+          ),
         ),
       ],
+    );
+  }
+
+  Text _status() {
+    return const Text(
+      'Trung bình',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Column _value() {
+    return Column(
+      children: const [
+        SizedBox(
+          height: 30,
+        ),
+        Text(
+          '55',
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Text(
+          'AQI',
+          style: TextStyle(
+            fontSize: 25,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container _item(String element, double value) {
+    return Container(
+      width: 90,
+      height: 190,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: primaryColor,
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(-20, -20),
+            blurRadius: 60,
+            color: Colors.white,
+            inset: true,
+          ),
+          BoxShadow(
+              offset: Offset(3, 4), blurRadius: 10, color: Color(0xFFBEBEBE))
+        ],
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(60 / 2)),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    value.toString(),
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 60,
+            ),
+            Text(
+              element,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
