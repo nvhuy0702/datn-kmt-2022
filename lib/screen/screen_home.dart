@@ -1,4 +1,4 @@
-import 'package:app_datn_2022/screen/screen_place.dart';
+import 'package:app_datn_2022/widget/screen/air_quality_item.dart';
 import 'package:flutter/material.dart';
 
 class ScreenHome extends StatefulWidget {
@@ -31,6 +31,6 @@ class _ScreenHomeState extends State<ScreenHome> {
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
-        body: const ScreenPlace());
+        body: const AirQualityItem());
   }
 }

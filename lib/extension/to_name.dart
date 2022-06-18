@@ -12,11 +12,11 @@ extension ToStatus on State {
         break;
       case State.UNHEALTHYGROUP:
         // TODO: Handle this case.
-        return 'Xấu';
+        return 'Kém';
         break;
       case State.UNHEALTHY:
         // TODO: Handle this case.
-        return 'Kém';
+        return 'Xấu';
         break;
       case State.VERYUNHEALTHY:
         // TODO: Handle this case.
