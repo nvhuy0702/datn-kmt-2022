@@ -6,7 +6,6 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:intl/intl.dart';
 
 class AirQualityItem extends StatefulWidget {
-
   const AirQualityItem({
     Key? key,
     this.condition,
@@ -17,7 +16,6 @@ class AirQualityItem extends StatefulWidget {
   @override
   State<AirQualityItem> createState() => _AirQualityItemState();
 }
-
 
 class _AirQualityItemState extends State<AirQualityItem> {
   ValueBloc valueBloc = ValueBloc();
@@ -35,9 +33,14 @@ class _AirQualityItemState extends State<AirQualityItem> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             children: [
-              const SizedBox(width: 10,),
+              const SizedBox(
+                width: 10,
+              ),
               _header(widget.condition),
             ],
           ),
@@ -87,15 +90,17 @@ class _AirQualityItemState extends State<AirQualityItem> {
     return StreamBuilder(
       stream: valueBloc.streamValue,
       builder: (context, snapshot) {
-
         if (!snapshot.hasData) return const SizedBox();
         final data = snapshot.data as List<double>;
         return Column(
           children: [
             Row(
               children: [
-                const SizedBox(width: 40,),
-                _weather('assets/images/02d.png', '${data[0].toStringAsFixed(1)} °C'),
+                const SizedBox(
+                  width: 40,
+                ),
+                _weather('assets/images/02d.png',
+                    '${data[0].toStringAsFixed(1)} °C'),
                 const SizedBox(
                   width: 20,
                 ),
@@ -105,35 +110,29 @@ class _AirQualityItemState extends State<AirQualityItem> {
                 ),
               ],
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             SizedBox(
-              height: 150,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width - 32,
               child: Wrap(
                 spacing: 30,
-                runSpacing: 20,
+                runSpacing: 10,
                 alignment: WrapAlignment.center,
                 children: [
-                  _item(
-                      'CO2',
-                      data[1].toDouble(),
-                       Colors.blue
-                  ),
-                  _item(
-                      'UV',
-                      data[2].toDouble(),
-                       Colors.blue
-                  ),
+                  _item('CO2', data[1].toDouble(), Colors.blue, 'ppm'),
+                  _item('UV', data[2].toDouble(), Colors.blue, 'µW/cm²'),
                   _item(
                       'CO',
                       data[3].toDouble(),
-                      TripleH.CO.initializeFromRange(value: 46000).color
-                  ),
+                      TripleH.CO.initializeFromRange(value: 46000).color,
+                      'ppm'),
                   _item(
                       'D',
                       data[5].roundToDouble(),
-                      TripleH.PM10.initializeFromRange(value: 275).color
-                  ),
+                      TripleH.PM10.initializeFromRange(value: 275).color,
+                      'μg/m3'),
                 ],
               ),
             ),
@@ -156,9 +155,10 @@ class _AirQualityItemState extends State<AirQualityItem> {
             color: TripleH.aqiDATN.initializeFromRange(range: 35).color,
             boxShadow: [
               BoxShadow(
-                offset: const Offset(3,1),
+                offset: const Offset(3, 1),
                 blurRadius: 10,
-                color: TripleH.aqiDATN.initializeFromRange(range: 35).color ?? Colors.white,
+                color: TripleH.aqiDATN.initializeFromRange(range: 35).color ??
+                    Colors.white,
               )
             ],
             borderRadius: BorderRadius.circular(10),
@@ -166,7 +166,10 @@ class _AirQualityItemState extends State<AirQualityItem> {
           child: Row(
             children: [
               Image(
-                image: AssetImage(TripleH.aqiDATN.initializeFromRange(range: 23).pathAvatar.toString()),
+                image: AssetImage(TripleH.aqiDATN
+                    .initializeFromRange(range: 23)
+                    .pathAvatar
+                    .toString()),
                 height: 120,
                 width: 120,
               ),
@@ -177,27 +180,26 @@ class _AirQualityItemState extends State<AirQualityItem> {
               const SizedBox(
                 width: 50,
               ),
-              Column(
-                children: [
-                  _status(condition),
-                ],
-              )
+              _status(condition)
             ],
           ),
         ),
       ],
     );
   }
+
   String getTime(var time) {
-    final DateFormat formatter = DateFormat('dd/MM/yyyy, hh:mm:ss aa');  //your date format here
+    final DateFormat formatter =
+        DateFormat('dd/MM/yyyy, hh:mm:ss aa'); //your date format here
     var date = time.toDate();
     return formatter.format(date);
   }
 
   Text _status(TripleH.aqiDATN? conditionDATN) {
     return Text(
-      TripleH.aqiDATN.initializeFromRange(range: 120).state.getName,
-      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+      TripleH.aqiDATN.initializeFromRange(range: 20).state.getName,
+      style: const TextStyle(
+          fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
     );
   }
 
@@ -209,7 +211,8 @@ class _AirQualityItemState extends State<AirQualityItem> {
         ),
         Text(
           value.toString(),
-          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
+          style: const TextStyle(
+              fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(
           height: 15,
@@ -224,10 +227,10 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 
-  Container _item(String element, double value, Color color) {
+  Container _item(String element, double value, Color color, String unit) {
     return Container(
       width: 90,
-      height: 190,
+      height: 210,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         color: primaryColor,
@@ -252,8 +255,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(60 / 2)),
+                  color: color, borderRadius: BorderRadius.circular(60 / 2)),
               child: Column(
                 children: [
                   const SizedBox(
@@ -262,16 +264,19 @@ class _AirQualityItemState extends State<AirQualityItem> {
                   Text(
                     value.toString(),
                     style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ],
               ),
             ),
             const SizedBox(
-              height: 60,
+              height: 10,
+            ),
+            _unit(unit),
+            const SizedBox(
+              height: 40,
             ),
             Text(
               element,
@@ -282,5 +287,21 @@ class _AirQualityItemState extends State<AirQualityItem> {
       ),
     );
   }
-}
 
+  Container _unit(String unit) {
+    return Container(
+      height: 50,
+      width: 50,
+      decoration: BoxDecoration(
+          color: Color(0xff635666),
+          borderRadius: BorderRadius.circular(60 / 2)),
+      child: Center(
+        child: Text(
+          unit,
+          style: const TextStyle(
+              fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
