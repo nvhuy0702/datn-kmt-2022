@@ -31,33 +31,25 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _header(widget.condition),
-        const SizedBox(
-          height: 40,
-        ),
-        Row(
-          children: [
-            _weather('assets/images/02d.png', 30),
-            const SizedBox(
-              width: 20,
-            ),
-            _weather('assets/images/50d.png', 20),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        _parameter(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 10,),
+              _header(widget.condition),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          _parameter(),
+        ],
+      ),
     );
   }
 
-  Container _weather(String image, double valueWeather) {
+  Container _weather(String image, String valueWeather) {
     return Container(
       width: 140,
       height: 50,
@@ -84,7 +76,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
           const SizedBox(
             width: 10,
           ),
-          Text('${valueWeather.toString()} °C')
+          Text(valueWeather)
         ],
       ),
     );
@@ -95,22 +87,55 @@ class _AirQualityItemState extends State<AirQualityItem> {
       stream: valueBloc.streamValue,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox();
-        final data = snapshot.data as List<int>;
-        return SizedBox(
-          height: 150,
-          width: MediaQuery.of(context).size.width - 32,
-          child: Wrap(
-            spacing: 30,
-            runSpacing: 20,
-            alignment: WrapAlignment.center,
-            children: [
-              _item('T', data[0].toDouble()),
-              _item('CO2', data[1].toDouble()),
-              _item('UV', data[2].toDouble()),
-              _item('CO', data[3].toDouble()),
-              _item('H', data[4].toDouble()),
-            ],
-          ),
+        final data = snapshot.data as List<double>;
+        return Column(
+          children: [
+            Row(
+              children: [
+                const SizedBox(width: 40,),
+                _weather('assets/images/02d.png', '${data[0].toStringAsFixed(1)} °C'),
+                const SizedBox(
+                  width: 20,
+                ),
+                _weather('assets/images/hum.png', '${data[4].toDouble()} %'),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+            const SizedBox(height: 40,),
+            SizedBox(
+              height: 150,
+              width: MediaQuery.of(context).size.width - 32,
+              child: Wrap(
+                spacing: 30,
+                runSpacing: 20,
+                alignment: WrapAlignment.center,
+                children: [
+                  _item(
+                      'CO2',
+                      data[1].toDouble(),
+                       Colors.blue
+                  ),
+                  _item(
+                      'UV',
+                      data[2].toDouble(),
+                       Colors.blue
+                  ),
+                  _item(
+                      'CO',
+                      data[3].toDouble(),
+                      TripleH.CO.initializeFromRange(value: 46000).color
+                  ),
+                  _item(
+                      'D',
+                      data[5].roundToDouble(),
+                      TripleH.PM10.initializeFromRange(value: 275).color
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
@@ -138,7 +163,6 @@ class _AirQualityItemState extends State<AirQualityItem> {
           ),
           child: Row(
             children: [
-              const SizedBox(width: 30,),
               Image(
                 image: AssetImage(TripleH.aqiDATN.initializeFromRange(range: 23).pathAvatar.toString()),
                 height: 120,
@@ -160,12 +184,9 @@ class _AirQualityItemState extends State<AirQualityItem> {
   }
 
   Text _status(TripleH.aqiDATN? conditionDATN) {
-
-
-
     return Text(
-      TripleH.aqiDATN.initializeFromRange(range: 50).state.getName,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      TripleH.aqiDATN.initializeFromRange(range: 120).state.getName,
+      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
     );
   }
 
@@ -177,7 +198,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
         ),
         Text(
           value.toString(),
-          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(
           height: 15,
@@ -192,7 +213,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 
-  Container _item(String element, double value) {
+  Container _item(String element, double value, Color color) {
     return Container(
       width: 90,
       height: 190,
@@ -220,7 +241,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                  color: Colors.redAccent,
+                  color: color,
                   borderRadius: BorderRadius.circular(60 / 2)),
               child: Column(
                 children: [
@@ -231,6 +252,8 @@ class _AirQualityItemState extends State<AirQualityItem> {
                     value.toString(),
                     style: const TextStyle(
                       fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
                     ),
                   ),
                 ],

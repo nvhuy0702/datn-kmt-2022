@@ -8,20 +8,21 @@ part 'value_state.dart';
 
 class ValueBloc extends Bloc<ValueEvent, ValueState> {
   final _dbRef = FirebaseDatabase.instance.reference();
-  late final _tableRef = _dbRef.child('node').child('n1').child('n1');
+  late final _tableRef = _dbRef.child('node').child('n1').child('n1-0');
   Stream? onListenTemp;
   Stream? onListenCO2;
   Stream? onListenUV;
   Stream? onListenCO;
   Stream? onListenH;
+  Stream? onListenD;
 
-  List<int> data = [0, 0, 0, 0, 0];
+  List<double> data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
-  StreamController<List<int>> showingSections = StreamController();
+  StreamController<List<double>> showingSections = StreamController();
 
-  Stream<List<int>> get streamValue => showingSections.stream;
+  Stream<List<double>> get streamValue => showingSections.stream;
 
-  Sink<List<int>> get sinkValue => showingSections.sink;
+  Sink<List<double>> get sinkValue => showingSections.sink;
 
   void init() {
     onListenTemp = _tableRef.child('T').onValue;
@@ -29,6 +30,7 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
     onListenUV = _tableRef.child('UV').onValue;
     onListenCO = _tableRef.child('CO').onValue;
     onListenH = _tableRef.child('H').onValue;
+    onListenD = _tableRef.child('D').onValue;
 
     sinkValue.add(data);
 
@@ -37,6 +39,7 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
     listen(onListenUV,3);
     listen(onListenCO,4);
     listen(onListenH,5);
+    listen(onListenD,6);
   }
   void listen(Stream? stream, int index) {
     stream?.listen((event) {
@@ -44,6 +47,7 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
       if(value == null) return;
       data[index - 1] = value;
       sinkValue.add(data);
+      print('data $data');
     });
   }
 

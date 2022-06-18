@@ -1,3 +1,4 @@
+import 'package:app_datn_2022/screen/screen_place.dart';
 import 'package:app_datn_2022/widget/screen/air_quality_item.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,12 @@ class _ScreenHomeState extends State<ScreenHome> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            'ABCXYZ',
-            style: TextStyle(color: Colors.black),
+            'Đồ án KMT',
+            style: TextStyle(
+                color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 30
+            ),
           ),
           actions: [
             IconButton(
