@@ -108,6 +108,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
               _item('CO2', data[1].toDouble()),
               _item('UV', data[2].toDouble()),
               _item('CO', data[3].toDouble()),
+              _item('H', data[4].toDouble()),
             ],
           ),
         );
@@ -125,14 +126,21 @@ class _AirQualityItemState extends State<AirQualityItem> {
           height: 150,
           width: 380,
           decoration: BoxDecoration(
-            color: TripleH.aqiDATN.initializeFromRange(range: 105).color,
+            color: TripleH.aqiDATN.initializeFromRange(range: 35).color,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(3,1),
+                blurRadius: 10,
+                color: TripleH.aqiDATN.initializeFromRange(range: 35).color ?? Colors.white,
+              )
+            ],
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
               const SizedBox(width: 30,),
               Image(
-                image: AssetImage(TripleH.aqiDATN.initializeFromRange(range: 105).pathAvatar.toString()),
+                image: AssetImage(TripleH.aqiDATN.initializeFromRange(range: 23).pathAvatar.toString()),
                 height: 120,
                 width: 120,
               ),
@@ -176,7 +184,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
         ),
         const Text(
           'AQI',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 25,
           ),
         ),

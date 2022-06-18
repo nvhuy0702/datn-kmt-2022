@@ -12,9 +12,10 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
   Stream? onListenTemp;
   Stream? onListenCO2;
   Stream? onListenUV;
-  Stream? onListenTest;
+  Stream? onListenCO;
+  Stream? onListenH;
 
-  List<int> data = [0, 0, 0, 0];
+  List<int> data = [0, 0, 0, 0, 0];
 
   StreamController<List<int>> showingSections = StreamController();
 
@@ -26,21 +27,22 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
     onListenTemp = _tableRef.child('T').onValue;
     onListenCO2 = _tableRef.child('CO2').onValue;
     onListenUV = _tableRef.child('UV').onValue;
-    onListenTest = _tableRef.child('CO').onValue;
+    onListenCO = _tableRef.child('CO').onValue;
+    onListenH = _tableRef.child('H').onValue;
 
     sinkValue.add(data);
 
     listen(onListenTemp,1);
     listen(onListenCO2,2);
     listen(onListenUV,3);
-    listen(onListenTest,4);
+    listen(onListenCO,4);
+    listen(onListenH,5);
   }
   void listen(Stream? stream, int index) {
     stream?.listen((event) {
       final value = (event as Event).snapshot.value;
       if(value == null) return;
       data[index - 1] = value;
-      print('value $value');
       sinkValue.add(data);
     });
   }
