@@ -3,6 +3,7 @@ import 'package:app_datn_2022/extension/to_name.dart';
 import 'package:app_datn_2022/model/aqi_datn.dart' as TripleH;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:intl/intl.dart';
 
 class AirQualityItem extends StatefulWidget {
 
@@ -86,6 +87,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
     return StreamBuilder(
       stream: valueBloc.streamValue,
       builder: (context, snapshot) {
+
         if (!snapshot.hasData) return const SizedBox();
         final data = snapshot.data as List<double>;
         return Column(
@@ -175,12 +177,21 @@ class _AirQualityItemState extends State<AirQualityItem> {
               const SizedBox(
                 width: 50,
               ),
-              _status(condition)
+              Column(
+                children: [
+                  _status(condition),
+                ],
+              )
             ],
           ),
         ),
       ],
     );
+  }
+  String getTime(var time) {
+    final DateFormat formatter = DateFormat('dd/MM/yyyy, hh:mm:ss aa');  //your date format here
+    var date = time.toDate();
+    return formatter.format(date);
   }
 
   Text _status(TripleH.aqiDATN? conditionDATN) {
