@@ -1,7 +1,9 @@
-import 'package:app_datn_2022/widget/screen/air_quality_item.dart';
+import 'package:app_datn_2022/screen/history.dart';
+import 'package:app_datn_2022/widget/air_quality_item.dart';
 import 'package:flutter/material.dart';
 
 class ScreenHome extends StatefulWidget {
+
   const ScreenHome({Key? key}) : super(key: key);
 
   @override
@@ -25,7 +27,11 @@ class _ScreenHomeState extends State<ScreenHome> {
           ),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const History())
+                  );
+                },
                 icon: const Icon(
                   Icons.history,
                   color: Colors.black,

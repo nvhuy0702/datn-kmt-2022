@@ -49,11 +49,11 @@ void main() async {
   SharePreferenceSingleton.initializePrefrerences();
 
   Future.delayed(const Duration(milliseconds: 1000)).then((value) {
-   // SharePreferenceSingleton.removeAll();
+    SharePreferenceSingleton.removeAll();
    // SharePreferenceSingleton.insert([10,20,30,40]);
-   // SharePreferenceSingleton.insert([50,60,70,80]);
-   // SharePreferenceSingleton.insert([25,50,75,100]);
-   // SharePreferenceSingleton.insert([150,500,1800,9600]);
+   SharePreferenceSingleton.insert([50,60,70,80]);
+    SharePreferenceSingleton.insert([25,50,75,100]);
+    SharePreferenceSingleton.insert([150,500,1800,9600]);
     print("hahahahahaha => ${SharePreferenceSingleton.histories()}");
   });
   runApp(const MyApp());

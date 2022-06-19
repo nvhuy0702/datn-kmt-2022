@@ -59,7 +59,6 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
       if (value == null) return;
       data[index - 1] = value * 1.0;
       sinkValue.add(data);
-      print('data $data');
     });
   }
 

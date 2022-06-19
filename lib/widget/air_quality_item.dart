@@ -129,7 +129,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
                       TripleH.CO.initializeFromRange(value: 46000).color,
                       'ppm'),
                   _item(
-                      'D',
+                      'PM2.5',
                       data[5].roundToDouble(),
                       TripleH.PM10.initializeFromRange(value: 275).color,
                       'μg/m3'),
@@ -229,8 +229,8 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   Container _item(String element, double value, Color color, String unit) {
     return Container(
-      width: 90,
-      height: 210,
+      width: 100,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         color: primaryColor,
@@ -252,19 +252,19 @@ class _AirQualityItemState extends State<AirQualityItem> {
               height: 20,
             ),
             Container(
-              height: 60,
-              width: 60,
+              height: 80,
+              width: 80,
               decoration: BoxDecoration(
-                  color: color, borderRadius: BorderRadius.circular(60 / 2)),
+                  color: color, borderRadius: BorderRadius.circular(80 / 2)),
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 20,
+                    height: 25,
                   ),
                   Text(
                     value.toString(),
                     style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 23,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
@@ -276,11 +276,11 @@ class _AirQualityItemState extends State<AirQualityItem> {
             ),
             _unit(unit),
             const SizedBox(
-              height: 40,
+              height: 30,
             ),
             Text(
               element,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             )
           ],
         ),
@@ -290,10 +290,10 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   Container _unit(String unit) {
     return Container(
-      height: 50,
-      width: 50,
+      height: 60,
+      width: 60,
       decoration: BoxDecoration(
-          color: Color(0xff635666),
+          color: const Color(0xff635666),
           borderRadius: BorderRadius.circular(60 / 2)),
       child: Center(
         child: Text(
