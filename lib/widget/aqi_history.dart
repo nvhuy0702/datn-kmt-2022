@@ -2,20 +2,21 @@ import 'package:app_datn_2022/extension/to_name.dart';
 import 'package:flutter/material.dart';
 import 'package:app_datn_2022/model/aqi_datn.dart' as TripleH;
 class AqiHistory extends StatefulWidget {
+  final double value;
+  const AqiHistory({Key? key, required this.value}) : super(key: key);
 
-  const AqiHistory({Key? key, this.condition}) : super(key: key);
-  final TripleH.aqiDATN? condition;
   @override
   State<AqiHistory> createState() => _AqiHistoryState();
 }
 
 class _AqiHistoryState extends State<AqiHistory> {
-  int value = 55;
+  TripleH.aqiDATN? condition ;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 230,
-      width: 390,
+      width: 230,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -40,8 +41,8 @@ class _AqiHistoryState extends State<AqiHistory> {
           const SizedBox(height: 20,),
           Row(
             children: [
-              SizedBox(width: 10,),
-              _header(widget.condition),
+              const SizedBox(width: 10,),
+              _header(condition),
             ],
           )
         ],
@@ -107,7 +108,7 @@ class _AqiHistoryState extends State<AqiHistory> {
           height: 30,
         ),
         Text(
-          value.toString(),
+          widget.value.toString(),
           style: const TextStyle(
               fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
         ),

@@ -29,7 +29,7 @@ class SharePreferenceSingleton {
     return items.isNotEmpty == true;
   }
 
-  static void removeAll() =>  _preferences?.setStringList(name,[]);
+  static void  removeAll() =>  _preferences?.setStringList(name,[]);
 
 
   static List<List<double>> histories() {
@@ -67,6 +67,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider<CountriesBloc>(
       create: (context) => CountriesBloc(CountriesRepo()),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

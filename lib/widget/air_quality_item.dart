@@ -20,7 +20,7 @@ class AirQualityItem extends StatefulWidget {
 class _AirQualityItemState extends State<AirQualityItem> {
   ValueBloc valueBloc = ValueBloc();
   final primaryColor = const Color(0xFFE0E0E0);
-  int value = 55;
+  int value = 250;
 
   @override
   void initState() {
@@ -150,14 +150,14 @@ class _AirQualityItemState extends State<AirQualityItem> {
         ),
         Container(
           height: 150,
-          width: 380,
+          width: 360,
           decoration: BoxDecoration(
-            color: TripleH.aqiDATN.initializeFromRange(range: 35).color,
+            color: TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).color,
             boxShadow: [
               BoxShadow(
                 offset: const Offset(3, 1),
                 blurRadius: 10,
-                color: TripleH.aqiDATN.initializeFromRange(range: 35).color ??
+                color: TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).color ??
                     Colors.white,
               )
             ],
@@ -167,18 +167,18 @@ class _AirQualityItemState extends State<AirQualityItem> {
             children: [
               Image(
                 image: AssetImage(TripleH.aqiDATN
-                    .initializeFromRange(range: 23)
+                    .initializeFromRange(range: value.toDouble())
                     .pathAvatar
                     .toString()),
                 height: 120,
                 width: 120,
               ),
               const SizedBox(
-                width: 40,
+                width: 20,
               ),
               _value(),
               const SizedBox(
-                width: 50,
+                width: 30,
               ),
               _status(condition)
             ],
@@ -197,7 +197,9 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   Text _status(TripleH.aqiDATN? conditionDATN) {
     return Text(
-      TripleH.aqiDATN.initializeFromRange(range: 20).state.getName,
+
+      TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).state.getName,
+      textAlign: TextAlign.center,
       style: const TextStyle(
           fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
     );
