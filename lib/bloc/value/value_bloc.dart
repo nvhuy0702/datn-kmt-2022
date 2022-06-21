@@ -29,9 +29,11 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
 
   void init() {
     _tableRef.onValue.listen((event) {
-      final lastKey = (event.snapshot.value as Map).keys.last;
+      final map = (event.snapshot.value as Map);
+      final lastKey = map.keys.last;
       print("last key => $lastKey");
-      _register(dbCurrent?.child(lastKey ?? 'n1'));
+      final subLastKey = (map[lastKey] as Map).keys.last;
+      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
     });
   }
 
