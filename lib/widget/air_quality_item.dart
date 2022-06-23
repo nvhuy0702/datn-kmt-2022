@@ -20,7 +20,7 @@ class AirQualityItem extends StatefulWidget {
 class _AirQualityItemState extends State<AirQualityItem> {
   ValueBloc valueBloc = ValueBloc();
   final primaryColor = const Color(0xFFE0E0E0);
-  int value = 250;
+  int valueAQI = 40;
 
   @override
   void initState() {
@@ -36,14 +36,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
           const SizedBox(
             height: 20,
           ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              _header(widget.condition),
-            ],
-          ),
+          _header(widget.condition),
           const SizedBox(
             height: 30,
           ),
@@ -151,18 +144,16 @@ class _AirQualityItemState extends State<AirQualityItem> {
     return Row(
       children: [
         const SizedBox(
-          width: 4,
+          width: 10,
         ),
         Container(
-          height: 150,
-          width: 360,
           decoration: BoxDecoration(
-            color: TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).color,
+            color: TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).color,
             boxShadow: [
               BoxShadow(
                 offset: const Offset(3, 1),
                 blurRadius: 10,
-                color: TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).color ??
+                color: TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).color ??
                     Colors.white,
               )
             ],
@@ -170,22 +161,23 @@ class _AirQualityItemState extends State<AirQualityItem> {
           ),
           child: Row(
             children: [
+              const SizedBox(
+                width: 10,
+              ),
               Image(
                 image: AssetImage(TripleH.aqiDATN
-                    .initializeFromRange(range: value.toDouble())
+                    .initializeFromRange(range: valueAQI.toDouble())
                     .pathAvatar
                     .toString()),
                 height: 120,
                 width: 120,
               ),
-              const SizedBox(
-                width: 20,
-              ),
+              SizedBox(width: 10,),
               _value(),
-              const SizedBox(
-                width: 30,
+              SizedBox(
+                width: 130,
+                  child: _status(condition)
               ),
-              _status(condition)
             ],
           ),
         ),
@@ -200,37 +192,45 @@ class _AirQualityItemState extends State<AirQualityItem> {
     return formatter.format(date);
   }
 
-  Text _status(TripleH.aqiDATN? conditionDATN) {
+  Widget _status(TripleH.aqiDATN? conditionDATN) {
     return Text(
-
-      TripleH.aqiDATN.initializeFromRange(range: value.toDouble()).state.getName,
+      TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).state.getName,
       textAlign: TextAlign.center,
       style: const TextStyle(
-          fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
     );
   }
 
-  Column _value() {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 30,
+  Widget _value() {
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              valueAQI.toString(),
+              style: const TextStyle(
+                  fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const Text(
+              'AQI',
+              style: TextStyle(
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
         ),
-        Text(
-          value.toString(),
-          style: const TextStyle(
-              fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        const Text(
-          'AQI',
-          style: TextStyle(
-            fontSize: 25,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
