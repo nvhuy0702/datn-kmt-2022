@@ -121,18 +121,23 @@ class _AirQualityItemState extends State<AirQualityItem> {
                 runSpacing: 10,
                 alignment: WrapAlignment.center,
                 children: [
-                  _item('CO2', data[1].toDouble(), Colors.blue, 'ppm'),
+                  _item('D10', data[1].toDouble(), Colors.blue, 'μg/m3'),
                   _item('UV', data[2].toDouble(), Colors.blue, 'µW/cm²'),
                   _item(
                       'CO',
                       data[3].toDouble(),
                       TripleH.CO.initializeFromRange(value: 46000).color,
                       'ppm'),
-                  _item(
-                      'PM2.5',
-                      data[5].roundToDouble(),
-                      TripleH.PM10.initializeFromRange(value: 275).color,
-                      'μg/m3'),
+                  Builder(
+                    builder: (context) {
+
+                      return _item(
+                          'PM2.5',
+                          data[5],
+                          TripleH.PM10.initializeFromRange(value: 275).color,
+                          'μg/m3');
+                    }
+                  ),
                 ],
               ),
             ),
@@ -230,6 +235,8 @@ class _AirQualityItemState extends State<AirQualityItem> {
   }
 
   Container _item(String element, double value, Color color, String unit) {
+    var f = NumberFormat("###.#", "en_US");
+    String valueString = f.format(value);
     return Container(
       width: 100,
       height: 250,
@@ -264,7 +271,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
                     height: 25,
                   ),
                   Text(
-                    value.toString(),
+                    valueString,
                     style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,

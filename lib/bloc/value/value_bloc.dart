@@ -39,7 +39,7 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
 
   void _register(DatabaseReference? ref) {
     onListenTemp = ref?.child('T').onValue;
-    onListenCO2 = ref?.child('CO2').onValue;
+    onListenCO2 = ref?.child('D10').onValue;
     onListenUV = ref?.child('UV').onValue;
     onListenCO = ref?.child('CO').onValue;
     onListenH = ref?.child('H').onValue;
