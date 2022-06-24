@@ -1,4 +1,4 @@
-import 'package:app_datn_2022/screen/history.dart';
+import 'package:app_datn_2022/screen/control_device.dart';
 import 'package:app_datn_2022/widget/air_quality_item.dart';
 import 'package:flutter/material.dart';
 
@@ -22,21 +22,20 @@ class _ScreenHomeState extends State<ScreenHome> {
             style: TextStyle(
                 color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 30
+              fontSize: 25
             ),
           ),
           actions: [
             IconButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const History())
+                    MaterialPageRoute(builder: (_) => const ControlDevice())
                   );
                 },
-                icon: const Icon(
-                  Icons.history,
-                  color: Colors.black,
-                  size: 30,
-                ))
+                icon: const Image(
+                  image: AssetImage('assets/images/control_device.png'),
+                )
+            )
           ],
           centerTitle: true,
           backgroundColor: Colors.white,

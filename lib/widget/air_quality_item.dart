@@ -46,7 +46,9 @@ class _AirQualityItemState extends State<AirQualityItem> {
     );
   }
 
-  Container _weather(String image, String valueWeather) {
+  Widget _weather(String image, double valueWeather, String unit) {
+    var f = NumberFormat("###.#", "en_US");
+    String valueString = f.format(valueWeather);
     return Container(
       width: 140,
       height: 50,
@@ -73,7 +75,7 @@ class _AirQualityItemState extends State<AirQualityItem> {
           const SizedBox(
             width: 10,
           ),
-          Text(valueWeather)
+          Text('$valueString $unit')
         ],
       ),
     );
@@ -92,12 +94,11 @@ class _AirQualityItemState extends State<AirQualityItem> {
                 const SizedBox(
                   width: 40,
                 ),
-                _weather('assets/images/02d.png',
-                    '${data[0].toStringAsFixed(1)} °C'),
+                _weather('assets/images/02d.png', data[0], '°C'),
                 const SizedBox(
                   width: 20,
                 ),
-                _weather('assets/images/hum.png', '${data[4].toDouble()} %'),
+                _weather('assets/images/hum.png', data[4], '%'),
                 const SizedBox(
                   width: 10,
                 ),
@@ -121,16 +122,13 @@ class _AirQualityItemState extends State<AirQualityItem> {
                       data[3].toDouble(),
                       TripleH.CO.initializeFromRange(value: 46000).color,
                       'ppm'),
-                  Builder(
-                    builder: (context) {
-
-                      return _item(
-                          'PM2.5',
-                          data[5],
-                          TripleH.PM10.initializeFromRange(value: 275).color,
-                          'μg/m3');
-                    }
-                  ),
+                  Builder(builder: (context) {
+                    return _item(
+                        'PM2.5',
+                        data[5],
+                        TripleH.PM10.initializeFromRange(value: 275).color,
+                        'μg/m3');
+                  }),
                 ],
               ),
             ),
@@ -148,12 +146,16 @@ class _AirQualityItemState extends State<AirQualityItem> {
         ),
         Container(
           decoration: BoxDecoration(
-            color: TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).color,
+            color: TripleH.aqiDATN
+                .initializeFromRange(range: valueAQI.toDouble())
+                .color,
             boxShadow: [
               BoxShadow(
                 offset: const Offset(3, 1),
                 blurRadius: 10,
-                color: TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).color ??
+                color: TripleH.aqiDATN
+                        .initializeFromRange(range: valueAQI.toDouble())
+                        .color ??
                     Colors.white,
               )
             ],
@@ -172,12 +174,11 @@ class _AirQualityItemState extends State<AirQualityItem> {
                 height: 120,
                 width: 120,
               ),
-              SizedBox(width: 10,),
-              _value(),
-              SizedBox(
-                width: 130,
-                  child: _status(condition)
+              const SizedBox(
+                width: 10,
               ),
+              _value(),
+              SizedBox(width: 130, child: _status(condition)),
             ],
           ),
         ),
@@ -194,7 +195,10 @@ class _AirQualityItemState extends State<AirQualityItem> {
 
   Widget _status(TripleH.aqiDATN? conditionDATN) {
     return Text(
-      TripleH.aqiDATN.initializeFromRange(range: valueAQI.toDouble()).state.getName,
+      TripleH.aqiDATN
+          .initializeFromRange(range: valueAQI.toDouble())
+          .state
+          .getName,
       textAlign: TextAlign.center,
       style: const TextStyle(
           fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
@@ -214,7 +218,9 @@ class _AirQualityItemState extends State<AirQualityItem> {
             Text(
               valueAQI.toString(),
               style: const TextStyle(
-                  fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(
               height: 15,
