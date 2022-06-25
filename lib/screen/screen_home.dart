@@ -20,7 +20,7 @@ class _ScreenHomeState extends State<ScreenHome> {
           title: const Text(
             'Đồ án KMT',
             style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff4467E7),
               fontWeight: FontWeight.bold,
               fontSize: 25
             ),
