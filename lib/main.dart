@@ -1,8 +1,15 @@
 import 'dart:core' as Blitch;
 import 'dart:core';
+import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
+import 'package:app_datn_2022/model/auth_repository.dart';
 import 'package:app_datn_2022/screen/screen_home.dart';
+import 'package:app_datn_2022/screen/screen_sign_in.dart';
+import 'package:app_datn_2022/screen/screen_sign_up.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SharePreferenceSingleton {
   static SharedPreferences? _preferences;
@@ -40,9 +47,10 @@ class SharePreferenceSingleton {
   }
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
   SharePreferenceSingleton.initializePrefrerences();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   Future.delayed(const Duration(milliseconds: 1000)).then((value) {
     SharePreferenceSingleton.removeAll();
@@ -50,7 +58,6 @@ void main() async {
     SharePreferenceSingleton.insert([50, 60, 70, 80]);
     SharePreferenceSingleton.insert([25, 50, 75, 100]);
     SharePreferenceSingleton.insert([150, 500, 1800, 9600]);
-    print("hahahahahaha => ${SharePreferenceSingleton.histories()}");
   });
   runApp(const MyApp());
 }
@@ -60,12 +67,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return  RepositoryProvider(
+      create: (context) => AuthRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(
+                authRepository:
+                RepositoryProvider.of<AuthRepository>(context)),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home:StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const ScreenHome();
+              }
+              return const ScreenHome();
+            },
+          ),
+        ),
       ),
-      home: const ScreenHome(),
     );
   }
 }

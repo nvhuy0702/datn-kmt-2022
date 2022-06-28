@@ -52,7 +52,7 @@ class _ControlDeviceState extends State<ControlDevice> {
           StreamBuilder(
             builder: (context, snapshot) {
               if (snapshot.data == null) return const SizedBox();
-              isOnDevice1 = (snapshot.data as Event).snapshot.value == "On";
+              isOnDevice1 = (snapshot.data as Event).snapshot.value == 1;
               return CardDeviceState(
                 onClick: bloc.onClickDevice1,
                 pathIconOpen: 'assets/images/open_door.png',
@@ -66,7 +66,7 @@ class _ControlDeviceState extends State<ControlDevice> {
           StreamBuilder(
             builder: (context, snapshot) {
               if (snapshot.data == null) return const SizedBox();
-              isOnDevice2 = (snapshot.data as Event).snapshot.value == "On";
+              isOnDevice2 = (snapshot.data as Event).snapshot.value == 1;
               return CardDeviceState(
                 onClick: bloc.onClickDevice2,
                 pathIconOpen: 'assets/images/open_door.png',

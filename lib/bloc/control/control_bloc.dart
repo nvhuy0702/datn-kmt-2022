@@ -7,18 +7,16 @@ part 'control_state.dart';
 
 class ControlBloc extends Bloc<ControlEvent, ControlState> {
   final _dbRef = FirebaseDatabase.instance.reference();
-  late final tableRef = _dbRef.child('node').child("ControlDevice");
+  late final tableRef = _dbRef.child('control').child("device");
   Stream? onDevice1;
   Stream? onDevice2;
 
   void init() {
     onDevice1 = tableRef
-        .child('StatusInRoom')
-        .child('Device 1')
+        .child('fan')
         .onValue;
     onDevice2 = tableRef
-        .child('StatusInRoom')
-        .child('Device 2')
+        .child('window')
         .onValue;
     emit(Successful());
   }
@@ -33,13 +31,13 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
 
   ControlBloc() : super(Loading()) {
     on<Device1Event>((event, emit) async {
-      await tableRef.child("StatusInRoom").update({
-        'Device 1': event.status1 == true ? 'On' : 'Off',
+      await tableRef.update({
+        'fan': event.status1 == true ? 1 : 0,
       });
     });
     on<Device2Event>((event, emit) async {
-      await tableRef.child("StatusInRoom").update({
-        'Device 2': event.status2 == true ? 'On' : 'Off',
+      await tableRef.update({
+        'window': event.status2 == true ?  1 : 0,
       });
     });
   }
