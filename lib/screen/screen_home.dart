@@ -1,5 +1,5 @@
 import 'package:app_datn_2022/screen/control_device.dart';
-import 'package:app_datn_2022/widget/air_quality_item.dart';
+import 'package:app_datn_2022/widget/air_quality.dart';
 import 'package:flutter/material.dart';
 
 class ScreenHome extends StatefulWidget {
@@ -40,6 +40,6 @@ class _ScreenHomeState extends State<ScreenHome> {
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
-        body: const AirQualityItem());
+        body: const AirQuality());
   }
 }

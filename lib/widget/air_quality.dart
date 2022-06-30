@@ -1,12 +1,13 @@
 import 'package:app_datn_2022/bloc/value/value_bloc.dart';
 import 'package:app_datn_2022/extension/to_name.dart';
 import 'package:app_datn_2022/model/aqi_datn.dart' as TripleH;
+import 'package:app_datn_2022/service/local_notification.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:intl/intl.dart';
 
-class AirQualityItem extends StatefulWidget {
-  const AirQualityItem({
+class AirQuality extends StatefulWidget {
+  const AirQuality({
     Key? key,
     this.condition,
   }) : super(key: key);
@@ -14,16 +15,18 @@ class AirQualityItem extends StatefulWidget {
   final TripleH.aqiDATN? condition;
 
   @override
-  State<AirQualityItem> createState() => _AirQualityItemState();
+  State<AirQuality> createState() => _AirQualityState();
 }
 
-class _AirQualityItemState extends State<AirQualityItem> {
+class _AirQualityState extends State<AirQuality> {
   ValueBloc valueBloc = ValueBloc();
   final primaryColor = const Color(0xFFE0E0E0);
   int valueAQI = 40;
+  final localNotification = LocalNotifications();
 
   @override
   void initState() {
+    localNotification.initializing();
     valueBloc.init();
     super.initState();
   }
@@ -116,7 +119,6 @@ class _AirQualityItemState extends State<AirQualityItem> {
                 alignment: WrapAlignment.center,
                 children: [
                   _item('D10', data[1].toDouble(), Colors.blue, 'μg/m3'),
-                  _item('UV', data[2].toDouble(), Colors.blue, 'µW/cm²'),
                   _item(
                       'CO',
                       data[3].toDouble(),
@@ -206,37 +208,44 @@ class _AirQualityItemState extends State<AirQualityItem> {
   }
 
   Widget _value() {
-    return SizedBox(
-      height: 100,
-      width: 100,
-      child: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 5,
+    return Builder(
+      builder: (context) {
+        if(valueAQI > 40) {
+          localNotification.showNotifications();
+        }
+        return SizedBox(
+          height: 100,
+          width: 100,
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  valueAQI.toString(),
+                  style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text(
+                  'AQI',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+              ],
             ),
-            Text(
-              valueAQI.toString(),
-              style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              'AQI',
-              style: TextStyle(
-                fontSize: 25,
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }
     );
   }
 

@@ -5,11 +5,13 @@ import 'package:app_datn_2022/model/auth_repository.dart';
 import 'package:app_datn_2022/screen/screen_home.dart';
 import 'package:app_datn_2022/screen/screen_sign_in.dart';
 import 'package:app_datn_2022/screen/screen_sign_up.dart';
+import 'package:app_datn_2022/service/local_notification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 class SharePreferenceSingleton {
   static SharedPreferences? _preferences;
@@ -69,12 +71,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  RepositoryProvider(
       create: (context) => AuthRepository(),
-      child: MultiBlocProvider(
+      child: MultiProvider(
         providers: [
           BlocProvider(
             create: (context) => AuthBloc(
                 authRepository:
                 RepositoryProvider.of<AuthRepository>(context)),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => LocalNotifications(),
           ),
         ],
         child: MaterialApp(
