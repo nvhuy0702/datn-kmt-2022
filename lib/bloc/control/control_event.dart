@@ -14,3 +14,7 @@ class Device2Event extends ControlEvent {
   final bool status2;
   const Device2Event({required this.status2});
 }
+class SelectedMode extends ControlEvent {
+  final bool mode;
+  const SelectedMode({required this.mode});
+}
