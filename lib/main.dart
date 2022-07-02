@@ -4,8 +4,6 @@ import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
 import 'package:app_datn_2022/model/auth_repository.dart';
 import 'package:app_datn_2022/screen/screen_home.dart';
 import 'package:app_datn_2022/screen/screen_sign_in.dart';
-import 'package:app_datn_2022/screen/screen_sign_up.dart';
-import 'package:app_datn_2022/service/local_notification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,9 +76,6 @@ class MyApp extends StatelessWidget {
                 authRepository:
                 RepositoryProvider.of<AuthRepository>(context)),
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => LocalNotifications(),
-          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -93,7 +88,7 @@ class MyApp extends StatelessWidget {
               if (snapshot.hasData) {
                 return const ScreenHome();
               }
-              return const ScreenHome();
+              return const ScreenSignIn();
             },
           ),
         ),
