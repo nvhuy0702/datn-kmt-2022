@@ -23,6 +23,9 @@ class ControlBloc extends Bloc<ControlEvent, ControlState> {
 
   void onClickDevice1(bool status1) {
     add(Device1Event(status1: status1));
+    /*for(var i = 0; i < 10; i++ ){
+      print('thi ra la vay : $i');
+    }*/
   }
 
   void onClickDevice2(bool status2) {

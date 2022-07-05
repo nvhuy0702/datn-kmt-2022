@@ -86,9 +86,9 @@ class MyApp extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return const ScreenHome();
+                return const ScreenSignIn();
               }
-              return const ScreenSignIn();
+              return const ScreenHome();
             },
           ),
         ),

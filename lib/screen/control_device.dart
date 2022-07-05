@@ -58,8 +58,8 @@ class _ControlDeviceState extends State<ControlDevice> {
                   isOnDevice1 = (snapshot.data as Event).snapshot.value == 1;
                   return CardDeviceState(
                     onClick: bloc.onClickDevice1,
-                    pathIconOpen: 'assets/images/open_door.png',
-                    pathIconClose: 'assets/images/close_door.png',
+                    pathIconOpen: 'assets/images/fan_on.png',
+                    pathIconClose: 'assets/images/fan_off.png',
                     isOn: isOnDevice1,
                     title: 'Device 1',
                   );

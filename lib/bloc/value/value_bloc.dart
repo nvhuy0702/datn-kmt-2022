@@ -10,58 +10,80 @@ part 'value_state.dart';
 
 class ValueBloc extends Bloc<ValueEvent, ValueState> {
   final _dbRef = FirebaseDatabase.instance.reference();
-  late final _tableRef = _dbRef.child('node').child('n1');
-  late DatabaseReference? dbCurrent = _dbRef.child('node').child('n1');
+ // late final _tableRef = _dbRef.child('node').child('n1');
+  //late DatabaseReference? dbCurrent = _dbRef.child('node').child('n1');
+  late final _tableRef1 = _dbRef.child('control').child('element');
   Stream? onListenTemp;
   Stream? onListenCO2;
   Stream? onListenUV;
   Stream? onListenCO;
   Stream? onListenH;
   Stream? onListenD;
+  Stream? onListenD10;
 
-  List<double> data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  //List<double> data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  List<dynamic> data1 = [0, 0, 0];
 
-  StreamController<List<double>> showingSections = StreamController();
+  StreamController<List<dynamic>> showingSections = StreamController();
 
-  Stream<List<double>> get streamValue => showingSections.stream;
+  Stream<List<dynamic>> get streamValue => showingSections.stream;
 
-  Sink<List<double>> get sinkValue => showingSections.sink;
+  Sink<List<dynamic>> get sinkValue => showingSections.sink;
 
-  void init() {
-    _tableRef.onValue.listen((event) {
-      final map = (event.snapshot.value as Map);
-      final lastKey = map.keys.last;
-      final subLastKey = (map[lastKey] as Map).keys.last;
-      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
-    });
+  // void init() {
+  //   _tableRef.onValue.listen((event) {
+  //     final map = (event.snapshot.value as Map);
+  //     final lastKey = map.keys.last;
+  //     final subLastKey = (map[lastKey] as Map).keys.last;
+  //     _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
+  //   });
+  // }
+  void init1() {
+    onListenCO = _tableRef1.child('CO').onValue;
+    onListenD = _tableRef1.child('D').onValue;
+    onListenD10 = _tableRef1.child('D10').onValue;
+
+    sinkValue.add(data1);
+
+    listen1(onListenCO,1);
+    listen1(onListenD,2);
+    listen1(onListenD10,3);
   }
-
-  void _register(DatabaseReference? ref) {
-    onListenTemp = ref?.child('T').onValue;
-    onListenCO2 = ref?.child('D10').onValue;
-    onListenUV = ref?.child('UV').onValue;
-    onListenCO = ref?.child('CO').onValue;
-    onListenH = ref?.child('H').onValue;
-    onListenD = ref?.child('D').onValue;
-
-    sinkValue.add(data);
-
-    listen(onListenTemp, 1);
-    listen(onListenCO2, 2);
-    listen(onListenUV, 3);
-    listen(onListenCO, 4);
-    listen(onListenH, 5);
-    listen(onListenD, 6);
-  }
-
-  void listen(Stream? stream, int index) {
+  void listen1(Stream? stream, int index) {
     stream?.listen((event) {
       final value = (event as Event).snapshot.value;
-      if (value == null) return;
-      data[index - 1] = value * 1.0;
-      sinkValue.add(data);
+      if(value == null) return;
+      print('value $value');
+      data1[index - 1] = value;
+      sinkValue.add(data1);
     });
   }
+  // void _register(DatabaseReference? ref) {
+  //   onListenTemp = ref?.child('T').onValue;
+  //   onListenCO2 = ref?.child('D10').onValue;
+  //   onListenUV = ref?.child('UV').onValue;
+  //   onListenCO = ref?.child('CO').onValue;
+  //   onListenH = ref?.child('H').onValue;
+  //   onListenD = ref?.child('D').onValue;
+  //
+  //   sinkValue.add(data);
+  //
+  //   listen(onListenTemp, 1);
+  //   listen(onListenCO2, 2);
+  //   listen(onListenUV, 3);
+  //   listen(onListenCO, 4);
+  //   listen(onListenH, 5);
+  //   listen(onListenD, 6);
+  // }
+
+  // void listen(Stream? stream, int index) {
+  //   stream?.listen((event) {
+  //     final value = (event as Event).snapshot.value;
+  //     if (value == null) return;
+  //     data[index - 1] = value * 1.0;
+  //     sinkValue.add(data);
+  //   });
+  // }
 
   ValueBloc() : super(Loading()) {
     on<Temp>((event, emit) {});
