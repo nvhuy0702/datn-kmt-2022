@@ -24,8 +24,7 @@ class _AirQualityState extends State<AirQuality> {
 
   @override
   void initState() {
-    //valueBloc.init();
-    valueBloc.init1();
+    valueBloc.init();
     super.initState();
   }
 
@@ -88,7 +87,7 @@ class _AirQualityState extends State<AirQuality> {
       builder: (context, snapshot) {
         print('snapshot $snapshot');
         if (!snapshot.hasData) return const SizedBox();
-        final data = snapshot.data as List<dynamic>;
+        final data = snapshot.data as List<double>;
         return Column(
           children: [
             Row(
@@ -96,11 +95,11 @@ class _AirQualityState extends State<AirQuality> {
                 const SizedBox(
                   width: 40,
                 ),
-                _weather('assets/images/02d.png', 30, '°C'),
+                _weather('assets/images/02d.png', data[0], '°C'),
                 const SizedBox(
                   width: 20,
                 ),
-                _weather('assets/images/hum.png', 70, '%'),
+                _weather('assets/images/hum.png', data[4], '%'),
                 const SizedBox(
                   width: 10,
                 ),
@@ -117,16 +116,16 @@ class _AirQualityState extends State<AirQuality> {
                 runSpacing: 10,
                 alignment: WrapAlignment.center,
                 children: [
-                  _item('D10', data[1], Colors.blue, 'μg/m3'),
+                  _item('D10', data[1].toDouble(), Colors.blue, 'μg/m3'),
                   _item(
                       'CO',
-                      data[0].toDouble(),
+                      data[3].toDouble(),
                       TripleH.CO.initializeFromRange(value: 46000).color,
                       'ppm'),
                   Builder(builder: (context) {
                     return _item(
                         'PM2.5',
-                        data[2].toDouble(),
+                        data[5],
                         TripleH.PM10.initializeFromRange(value: 275).color,
                         'μg/m3');
                   }),
