@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:app_datn_2022/main.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'dart:developer';
 
 part 'value_event.dart';
 
@@ -33,6 +35,10 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
   void init() {
     _tableRef.onValue.listen((event) {
       final map = (event.snapshot.value as Map);
+      log('map ==> $map');
+      map.forEach((key, value) {
+        
+      });
       final lastKey = map.keys.last;
       final subLastKey = (map[lastKey] as Map).keys.last;
       _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
@@ -90,4 +96,10 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
     on<UV>((event, emit) {});
     on<Test>((event, emit) {});
   }
+}
+
+const String dataKey = '_data';
+
+class SharedKey{
+
 }

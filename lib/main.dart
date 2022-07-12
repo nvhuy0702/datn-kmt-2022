@@ -47,7 +47,10 @@ class SharePreferenceSingleton {
   }
 }
 
+// late SharedPreferences myAppPreferences;
+
 Future<void> main() async {
+  // myAppPreferences  = await SharedPreferences.getInstance();
   SharePreferenceSingleton.initializePrefrerences();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
