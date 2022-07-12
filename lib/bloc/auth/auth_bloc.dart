@@ -1,3 +1,4 @@
+import 'package:app_datn_2022/main.dart';
 import 'package:app_datn_2022/model/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -12,6 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Loading());
       try {
         await authRepository.signIn(emailSignIn: event.emailSignIn, passwordSignIn: event.passwordSignIn);
+        myAppPreferences.setBool('logIn', true);
         emit(Authenticated());
       } catch (e) {
         emit(AuthError(error: e.toString()));
@@ -32,6 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Loading());
       try {
         await authRepository.signOut();
+        myAppPreferences.setBool('logIn', false);
         emit(Authenticated());
       } catch (e) {
         emit(AuthError(error: e.toString()));

@@ -1,6 +1,6 @@
 import 'package:app_datn_2022/assets/colors.dart';
 import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
-import 'package:app_datn_2022/screen/screen_home.dart';
+import 'package:app_datn_2022/screen/control_device.dart';
 import 'package:app_datn_2022/screen/screen_sign_up.dart';
 import 'package:app_datn_2022/widget/field_account.dart';
 import 'package:app_datn_2022/widget/field_password.dart';
@@ -34,7 +34,7 @@ class _ScreenSignInState extends State<ScreenSignIn> {
         listener: (context, state) {
           if (state is Authenticated) {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ScreenHome())
+                MaterialPageRoute(builder: (context) => const ControlDevice())
             );
           }
           if (state is AuthError) {
@@ -171,11 +171,6 @@ class _ScreenSignInState extends State<ScreenSignIn> {
         SignInRequest(_email.text, _password.text),
       );
     }
-  }
-  void _authenticateWithGoogle(context) {
-    BlocProvider.of<AuthBloc>(context).add(
-      SignInWithGoogle(),
-    );
   }
 }
 

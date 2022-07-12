@@ -11,57 +11,58 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-class SharePreferenceSingleton {
-  static SharedPreferences? _preferences;
-  static const name = "data";
+// class SharePreferenceSingleton {
+//   static SharedPreferences? _preferences;
+//   static const name = "data";
+//
+//   static Future initializePrefrerences() async {
+//     if (_preferences == null) {
+//       SharePreferenceSingleton._preferences =
+//           await SharedPreferences.getInstance();
+//     }
+//
+//     return _preferences != null;
+//   }
+//
+//   static bool insert(Blitch.List<double> data) {
+//     /// [40,60,80] => 40,60,80
+//     String convertListToString = data.join(",");
+//     final Blitch.List<String> items = _preferences?.getStringList(name) ?? [];
+//     items.add(convertListToString);
+//     _preferences?.setStringList(name, items);
+//     return items.isNotEmpty == true;
+//   }
+//
+//   static void removeAll() => _preferences?.setStringList(name, []);
+//
+//   static List<List<double>> histories() {
+//     /// [["1","2","3"]["4","5","6"]] => [[1,2,3],[4,5,6]]
+//     final Blitch.List<String>? items = _preferences?.getStringList(name);
+//
+//     final getHistories = items
+//         ?.map(
+//             (e) => e.split(",").map((e) => double.tryParse(e) ?? 0.0).toList())
+//         .toList();
+//     return getHistories ?? [];
+//   }
+// }
 
-  static Future initializePrefrerences() async {
-    if (_preferences == null) {
-      SharePreferenceSingleton._preferences =
-          await SharedPreferences.getInstance();
-    }
-
-    return _preferences != null;
-  }
-
-  static bool insert(Blitch.List<double> data) {
-    /// [40,60,80] => 40,60,80
-    String convertListToString = data.join(",");
-    final Blitch.List<String> items = _preferences?.getStringList(name) ?? [];
-    items.add(convertListToString);
-    _preferences?.setStringList(name, items);
-    return items.isNotEmpty == true;
-  }
-
-  static void removeAll() => _preferences?.setStringList(name, []);
-
-  static List<List<double>> histories() {
-    /// [["1","2","3"]["4","5","6"]] => [[1,2,3],[4,5,6]]
-    final Blitch.List<String>? items = _preferences?.getStringList(name);
-
-    final getHistories = items
-        ?.map(
-            (e) => e.split(",").map((e) => double.tryParse(e) ?? 0.0).toList())
-        .toList();
-    return getHistories ?? [];
-  }
-}
-
-// late SharedPreferences myAppPreferences;
+late SharedPreferences myAppPreferences;
 
 Future<void> main() async {
-  // myAppPreferences  = await SharedPreferences.getInstance();
-  SharePreferenceSingleton.initializePrefrerences();
+
+  // SharePreferenceSingleton.initializePrefrerences();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  myAppPreferences  = await SharedPreferences.getInstance();
 
-  Future.delayed(const Duration(milliseconds: 1000)).then((value) {
-    SharePreferenceSingleton.removeAll();
-    // SharePreferenceSingleton.insert([10,20,30,40]);
-    SharePreferenceSingleton.insert([50, 60, 70, 80]);
-    SharePreferenceSingleton.insert([25, 50, 75, 100]);
-    SharePreferenceSingleton.insert([150, 500, 1800, 9600]);
-  });
+  // Future.delayed(const Duration(milliseconds: 1000)).then((value) {
+  //   SharePreferenceSingleton.removeAll();
+  //   // SharePreferenceSingleton.insert([10,20,30,40]);
+  //   SharePreferenceSingleton.insert([50, 60, 70, 80]);
+  //   SharePreferenceSingleton.insert([25, 50, 75, 100]);
+  //   SharePreferenceSingleton.insert([150, 500, 1800, 9600]);
+  // });
   runApp(const MyApp());
 }
 
@@ -88,10 +89,13 @@ class MyApp extends StatelessWidget {
           home:StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const ScreenSignIn();
+              if(myAppPreferences.getBool('logIn') == true){
+                return  ScreenHome();
               }
-              return const ScreenHome();
+              if (snapshot.hasData) {
+                return const ScreenHome();
+              }
+              return const ScreenSignIn();
             },
           ),
         ),

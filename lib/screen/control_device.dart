@@ -1,6 +1,6 @@
 import 'package:app_datn_2022/bloc/control/control_bloc.dart';
 import 'package:app_datn_2022/main.dart';
-import 'package:app_datn_2022/widget/aqi_history.dart';
+import 'package:app_datn_2022/screen/screen_home.dart';
 import 'package:app_datn_2022/widget/card_device_state.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +19,10 @@ class _ControlDeviceState extends State<ControlDevice> {
   bool isOnDevice1 = false;
   bool isOnDevice2 = false;
   bool isAuto = false;
-
+  bool _isLogin = false;
   @override
   void initState() {
+    _isLogin = myAppPreferences.getBool('logIn') ?? false;
     bloc.init();
     super.initState();
   }
@@ -37,8 +38,29 @@ class _ControlDeviceState extends State<ControlDevice> {
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
+        actions: [
+          IconButton(
+              onPressed: (){
+                myAppPreferences.remove('logIn');
+                _isLogin = false;
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ScreenHome())
+                );
+              },
+              icon: const Icon(
+                  Icons.logout_outlined,
+                color: Colors.black,
+              )
+          )
+        ],
         leading: IconButton(
           onPressed: () {
+            if(_isLogin){
+              Navigator.push(context, MaterialPageRoute(builder: (_){
+                return const ScreenHome();
+              }));
+              return ;
+            }
             Navigator.of(context).pop();
           },
           icon: const Icon(

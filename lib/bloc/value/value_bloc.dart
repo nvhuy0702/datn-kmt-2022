@@ -37,7 +37,7 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
       final map = (event.snapshot.value as Map);
       log('map ==> $map');
       map.forEach((key, value) {
-        
+
       });
       final lastKey = map.keys.last;
       final subLastKey = (map[lastKey] as Map).keys.last;
