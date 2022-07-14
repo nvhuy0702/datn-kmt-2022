@@ -6,18 +6,17 @@ import 'package:flutter/material.dart';
 
 class ScreenHome extends StatefulWidget {
 
-  const ScreenHome({Key? key}) : super(key: key);
-
+  const ScreenHome({Key? key, required this.isLogin}) : super(key: key);
+  final bool isLogin;
   @override
   State<ScreenHome> createState() => _ScreenHomeState();
 }
 
 class _ScreenHomeState extends State<ScreenHome> {
   int index = 0;
-  bool _isLogin = false;
+
   @override
   void initState() {
-    _isLogin = myAppPreferences.getBool('logIn') ?? false;
     super.initState();
   }
   @override
@@ -35,14 +34,8 @@ class _ScreenHomeState extends State<ScreenHome> {
           leading:  IconButton(
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ScreenSignIn())
+                    MaterialPageRoute(builder: (_) => const ControlDevice())
                 );
-                if(_isLogin) {
-                  print('hhhhh $_isLogin');
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const ControlDevice())
-                  );
-                }
               },
               icon: const Image(
                 image: AssetImage('assets/images/control_device.png'),
