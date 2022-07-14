@@ -1,13 +1,14 @@
+import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
 import 'package:app_datn_2022/main.dart';
 import 'package:app_datn_2022/screen/control_device.dart';
 import 'package:app_datn_2022/screen/screen_sign_in.dart';
 import 'package:app_datn_2022/widget/air_quality.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreenHome extends StatefulWidget {
 
-  const ScreenHome({Key? key, required this.isLogin}) : super(key: key);
-  final bool isLogin;
+  const ScreenHome({Key? key}) : super(key: key);
   @override
   State<ScreenHome> createState() => _ScreenHomeState();
 }
@@ -44,6 +45,15 @@ class _ScreenHomeState extends State<ScreenHome> {
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
-        body: const AirQuality());
+        body: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is UnAuthenticated) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const ScreenSignIn()),
+                  (route) => false);
+            }
+          },
+          child: AirQuality(),
+        ));
   }
 }

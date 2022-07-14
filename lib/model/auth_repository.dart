@@ -1,49 +1,52 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
-  Future<void> signUp({required String emailSignUp, required String passwordSignUp}) async {
+
+  Future<void> signUp({required String email, required String password}) async {
     try {
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: emailSignUp, password: passwordSignUp);
+          .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      if(e.code == 'Mật khẩu yếu') {
+      if (e.code == 'weak-password') {
         throw Exception('Mật khẩu được cung cấp quá yếu.');
-      } else if (e.code == 'email đã được sử dụng') {
-        throw Exception('Email đã được sử dụng để tạo tài khoản');
+      } else if (e.code == 'email-already-in-use') {
+        throw Exception('Tài khoản đã tồn tại cho email đó.');
       }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-  Future<void> signIn({required String emailSignIn, required String passwordSignIn}) async {
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: emailSignIn, password: passwordSignIn);
+          .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      if(e.code == 'Không tìm thấy ngừoi dùng') {
+      if (e.code == 'user-not-found') {
         throw Exception('Không tìm thấy người dùng nào cho email đó.');
-      } else if (e.code == 'Sai mật khẩu') {
+      } else if (e.code == 'wrong-password') {
         throw Exception('Đã cung cấp sai mật khẩu cho người dùng đó.');
       }
-    } catch (e) {
-      throw Exception(e.toString());
     }
   }
-  Future<void>signInWithGoogle() async {
+  Future<void> resetPassword({
+    required String emailReset,
+  }) async {
     try {
-      final GoogleSignInAccount? googleSignInAccount = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication?.accessToken,
-        idToken: googleSignInAuthentication?.idToken,
-      );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    } catch (e) {
-      throw Exception(e.toString());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailReset);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw Exception('Không tìm thấy người dùng nào cho email đó.');
+      } else if (e.code == 'wrong-password') {
+        throw Exception('Đã cung cấp sai mật khẩu cho người dùng đó.');
+      }
     }
   }
+
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();

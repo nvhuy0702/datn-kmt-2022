@@ -1,51 +1,54 @@
-import 'package:app_datn_2022/assets/colors.dart';
 import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
 import 'package:app_datn_2022/screen/screen_home.dart';
 import 'package:app_datn_2022/screen/screen_sign_in.dart';
+import 'package:app_datn_2022/screen/screen_sign_up.dart';
 import 'package:app_datn_2022/widget/field_account.dart';
 import 'package:app_datn_2022/widget/field_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-class ScreenSignUp extends StatefulWidget {
-  const ScreenSignUp({Key? key}) : super(key: key);
+
+import '../assets/colors.dart';
+
+class ScreenResetPassword extends StatefulWidget {
+  const ScreenResetPassword({Key? key}) : super(key: key);
 
   @override
-  State<ScreenSignUp> createState() => _ScreenSignUpState();
+  State<ScreenResetPassword> createState() => _ScreenResetPasswordState();
 }
 
-class _ScreenSignUpState extends State<ScreenSignUp> {
+class _ScreenResetPasswordState extends State<ScreenResetPassword> {
 
   final _formKey = GlobalKey<FormState>();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _emailReset = TextEditingController();
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    _emailReset.dispose();
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          print('Huy Pham noi SignUp => ${state.runtimeType}');
           if (state is Authenticated) {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ScreenSignIn())
+            );
           }
           if (state is AuthError) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.error)));
           }
-        },
+        }, child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Loading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
+            if (state is UnAuthenticated) {
               return SingleChildScrollView(
                 child: Stack(
                   children: [
@@ -53,7 +56,6 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       color: secondaryColor,
-
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.10,
@@ -71,16 +73,16 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 250,
+                                height: 200,
                                 width: MediaQuery.of(context).size.width * 0.8,
                                 margin: EdgeInsets.only(
                                     left: MediaQuery.of(context).size.width * 0.09),
                                 child: Center(
                                   child: Text(
-                                      'Đăng ký',
+                                      'Đặt lại mật khẩu',
                                       style: GoogleFonts.pacifico(
                                           fontStyle: FontStyle.normal,
-                                          fontSize: 50,
+                                          fontSize: 40,
                                           color: const Color(0xff42C2FF)
                                       )
                                   ),
@@ -89,20 +91,15 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                               FieldAccount(
                                 headerText: "Tài khoản",
                                 hintText: "Email",
-                                textEditingController: _email,
+                                textEditingController: _emailReset,
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
-                              FieldPassword(
-                                headerText: "Mật khẩu",
-                                hintText: "Mật khẩu ít nhất 6 ký tự",
-                                textEditingController: _password,
-                              ),
                               const SizedBox(height: 45,),
                               InkWell(
                                 onTap: () {
-                                  _createAccountWithEmailAndPassword(context);
+                                  _resetPassword(context);
                                 },
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
@@ -114,7 +111,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                       const BorderRadius.all(Radius.circular(10))),
                                   child: Center(
                                     child: Text(
-                                      "Đăng ký",
+                                      "Đặt lại mật khẩu",
                                       style: TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w500,
@@ -124,29 +121,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    left: MediaQuery.of(context).size.width * 0.149,
-                                    top: MediaQuery.of(context).size.height * 0.05),
-                                child: Text.rich(
-                                  TextSpan(
-                                      text: "Bạn đã có tài khoản?  ",
-                                      style: TextStyle(
-                                          color: grayShade.withOpacity(0.8), fontSize: 16),
-                                      children: [
-                                        TextSpan(
-                                            text: "Đăng nhập",
-                                            style: TextStyle(color: blue, fontSize: 16),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => const ScreenSignIn()));
-                                              }),
-                                      ]),
-                                ),
-                              ),
+                              const SizedBox(height: 30,),
                             ],
                           ),
                         ),
@@ -155,17 +130,17 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                   ],
                 ),
               );
+            }
+            return Container();
           }
+      ),
       ),
     );
   }
-  void _createAccountWithEmailAndPassword(BuildContext context) {
+  void _resetPassword(context) {
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
-        SignUpRequested(
-        _email.text,
-          _password.text
-        ),
+        ResetPassword(_emailReset.text),
       );
     }
   }

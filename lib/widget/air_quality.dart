@@ -85,7 +85,6 @@ class _AirQualityState extends State<AirQuality> {
     return StreamBuilder(
       stream: valueBloc.streamValue,
       builder: (context, snapshot) {
-        print('snapshot $snapshot');
         if (!snapshot.hasData) return const SizedBox();
         final data = snapshot.data as List<double>;
         return Column(
@@ -95,7 +94,7 @@ class _AirQualityState extends State<AirQuality> {
                 const SizedBox(
                   width: 40,
                 ),
-                _weather('assets/images/02d.png', data[0], '°C'),
+                _weather('assets/images/02d.png', data[5], '°C'),
                 const SizedBox(
                   width: 20,
                 ),
@@ -116,19 +115,24 @@ class _AirQualityState extends State<AirQuality> {
                 runSpacing: 10,
                 alignment: WrapAlignment.center,
                 children: [
-                  _item('D10', data[1].toDouble(), Colors.blue, 'μg/m3'),
+                  _item('D10', data[2].toDouble(), Colors.blue, 'μg/m3'),
                   _item(
                       'CO',
-                      data[3].toDouble(),
+                      data[0].toDouble(),
                       TripleH.CO.initializeFromRange(value: 46000).color,
                       'ppm'),
                   Builder(builder: (context) {
                     return _item(
                         'PM2.5',
-                        data[5],
+                        data[1],
                         TripleH.PM10.initializeFromRange(value: 275).color,
                         'μg/m3');
                   }),
+                  _item(
+                      'GAS',
+                      data[3].toDouble(),
+                      TripleH.CO.initializeFromRange(value: 46000).color,
+                      'ppm'),
                 ],
               ),
             ),

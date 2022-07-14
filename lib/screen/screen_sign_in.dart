@@ -1,6 +1,6 @@
-import 'package:app_datn_2022/assets/colors.dart';
 import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
-import 'package:app_datn_2022/screen/control_device.dart';
+import 'package:app_datn_2022/screen/screen_home.dart';
+import 'package:app_datn_2022/screen/screen_reset_password.dart';
 import 'package:app_datn_2022/screen/screen_sign_up.dart';
 import 'package:app_datn_2022/widget/field_account.dart';
 import 'package:app_datn_2022/widget/field_password.dart';
@@ -8,6 +8,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../assets/colors.dart';
 
 class ScreenSignIn extends StatefulWidget {
   const ScreenSignIn({Key? key}) : super(key: key);
@@ -32,9 +34,11 @@ class _ScreenSignInState extends State<ScreenSignIn> {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
+          print('Huy Pham noi => ${state.runtimeType}');
           if (state is Authenticated) {
+            if((state.isSignIn ?? false) == false) return;
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ControlDevice())
+                MaterialPageRoute(builder: (context) => const ScreenHome())
             );
           }
           if (state is AuthError) {
@@ -48,7 +52,7 @@ class _ScreenSignInState extends State<ScreenSignIn> {
                 child: CircularProgressIndicator(),
               );
             }
-            if (state is UnAuthenticated) {
+
               return SingleChildScrollView(
                 child: Stack(
                   children: [
@@ -126,14 +130,30 @@ class _ScreenSignInState extends State<ScreenSignIn> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 60,),
+                              const SizedBox(height: 30,),
+                              InkWell(
+                                onTap: (){
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder:(_) => const ScreenResetPassword())
+                                  );
+                                },
+                                child: const Center(
+                                  child: Text(
+                                    'Quên mật khẩu',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.blue
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Container(
                                 margin: EdgeInsets.only(
                                     left: MediaQuery.of(context).size.width * 0.149,
                                     top: MediaQuery.of(context).size.height * 0.05),
                                 child: Text.rich(
                                   TextSpan(
-                                      text: "Bạn chưa có tài khoản?  ",
+                                      text: "Bạn chưa có tài khoản ? ",
                                       style: TextStyle(
                                           color: grayShade.withOpacity(0.8), fontSize: 16),
                                       children: [
@@ -141,8 +161,8 @@ class _ScreenSignInState extends State<ScreenSignIn> {
                                             text: "Đăng ký",
                                             style: TextStyle(color: blue, fontSize: 16),
                                             recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.push(
+                                              ..onTap = () async {
+                                                 await Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) => const ScreenSignUp()));
@@ -159,8 +179,6 @@ class _ScreenSignInState extends State<ScreenSignIn> {
                 ),
               );
             }
-            return Container();
-          }
       ),
       ),
     );
@@ -168,9 +186,9 @@ class _ScreenSignInState extends State<ScreenSignIn> {
   void _authenticateWithEmailAndPassword(context) {
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
-        SignInRequest(_email.text, _password.text),
+        SignInRequested(_email.text, _password.text),
       );
     }
   }
-}
 
+}

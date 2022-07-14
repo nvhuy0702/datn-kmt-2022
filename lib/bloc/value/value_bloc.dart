@@ -14,17 +14,14 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
   final _dbRef = FirebaseDatabase.instance.reference();
   late final _tableRef = _dbRef.child('node').child('n1');
   late DatabaseReference? dbCurrent = _dbRef.child('node').child('n1');
-  late final _tableRef1 = _dbRef.child('control').child('element');
   Stream? onListenTemp;
-  Stream? onListenCO2;
-  Stream? onListenUV;
+  Stream? onListenGAS;
   Stream? onListenCO;
   Stream? onListenH;
   Stream? onListenD;
   Stream? onListenD10;
 
   List<double> data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-  List<double> data1 = [0, 0, 0];
 
   StreamController<List<double>> showingSections = StreamController();
 
@@ -37,53 +34,35 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
       final map = (event.snapshot.value as Map);
       log('map ==> $map');
       map.forEach((key, value) {
-
       });
       final lastKey = map.keys.last;
+      log('lastKey ==> $lastKey');
       final subLastKey = (map[lastKey] as Map).keys.last;
       _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
     });
   }
-  void init1() {
-    onListenCO = _tableRef1.child('T').onValue;
-    onListenD = _tableRef1.child('CO2').onValue;
-    onListenUV = _tableRef1.child('UV').onValue;
-
-    sinkValue.add(data1);
-
-    listen1(onListenTemp,1);
-    listen1(onListenCO2,2);
-    listen1(onListenUV,3);
-  }
-  void listen1(Stream? stream, int index) {
-    stream?.listen((event) {
-      final value = (event as Event).snapshot.value;
-      if(value == null) return;
-      data[index - 1] = value;
-      sinkValue.add(data1);
-    });
-  }
   void _register(DatabaseReference? ref) {
     onListenTemp = ref?.child('T').onValue;
-    onListenCO2 = ref?.child('D10').onValue;
-    onListenUV = ref?.child('UV').onValue;
+    onListenD10 = ref?.child('D10').onValue;
     onListenCO = ref?.child('CO').onValue;
     onListenH = ref?.child('H').onValue;
     onListenD = ref?.child('D').onValue;
+    onListenGAS = ref?.child('GAS').onValue;
 
     sinkValue.add(data);
 
-    listen(onListenTemp, 1);
-    listen(onListenCO2, 2);
-    listen(onListenUV, 3);
-    listen(onListenCO, 4);
+    listen(onListenCO, 1);
+    listen(onListenD, 2);
+    listen(onListenD10, 3);
+    listen(onListenGAS, 4);
     listen(onListenH, 5);
-    listen(onListenD, 6);
+    listen(onListenTemp, 6);
   }
 
   void listen(Stream? stream, int index) {
     stream?.listen((event) {
       final value = (event as Event).snapshot.value;
+      log('value ==> $value');
       if (value == null) return;
       data[index - 1] = value * 1.0;
       sinkValue.add(data);

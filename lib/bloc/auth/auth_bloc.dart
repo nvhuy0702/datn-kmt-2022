@@ -2,6 +2,7 @@ import 'package:app_datn_2022/main.dart';
 import 'package:app_datn_2022/model/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -9,47 +10,43 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(UnAuthenticated()) {
-    on<SignInRequest>((event, emit) async {
+    on<SignInRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.signIn(emailSignIn: event.emailSignIn, passwordSignIn: event.passwordSignIn);
+        await authRepository.signIn(
+            email: event.email, password: event.password);
         myAppPreferences.setBool('logIn', true);
-        emit(Authenticated());
+        emit(Authenticated(isSignIn: true));
       } catch (e) {
-        emit(AuthError(error: e.toString()));
+        emit(AuthError(e.toString()));
         emit(UnAuthenticated());
       }
     });
-    on<SignUpRequest>((event, emit) async {
+    on<SignUpRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.signUp(emailSignUp: event.emailSignUp, passwordSignUp: event.passwordSignUp);
+        await authRepository.signUp(
+            email: event.email, password: event.password);
         emit(Authenticated());
       } catch (e) {
-        emit(AuthError(error: e.toString()));
+        emit(AuthError(e.toString()));
         emit(UnAuthenticated());
       }
     });
-    on<SignOutRequest>((event, emit) async {
+    on<ResetPassword>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.signOut();
-        myAppPreferences.setBool('logIn', false);
+        await authRepository.resetPassword(emailReset: event.emailReset);
         emit(Authenticated());
       } catch (e) {
-        emit(AuthError(error: e.toString()));
+        emit(AuthError(e.toString()));
         emit(UnAuthenticated());
       }
     });
-    on<SignInWithGoogle>((event, emit) async {
+    on<SignOutRequested>((event, emit) async {
       emit(Loading());
-      try {
-        await authRepository.signInWithGoogle();
-        emit(Authenticated());
-      } catch (e) {
-        emit(AuthError(error: e.toString()));
-        emit(UnAuthenticated());
-      }
+      await authRepository.signOut();
+      emit(UnAuthenticated());
     });
   }
 }
