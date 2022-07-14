@@ -1,4 +1,5 @@
 import 'package:app_datn_2022/bloc/auth/auth_bloc.dart';
+import 'package:app_datn_2022/screen/control_device.dart';
 import 'package:app_datn_2022/screen/screen_home.dart';
 import 'package:app_datn_2022/screen/screen_reset_password.dart';
 import 'package:app_datn_2022/screen/screen_sign_up.dart';
@@ -34,11 +35,9 @@ class _ScreenSignInState extends State<ScreenSignIn> {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          print('Huy Pham noi => ${state.runtimeType}');
           if (state is Authenticated) {
-            if((state.isSignIn ?? false) == false) return;
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ScreenHome())
+                MaterialPageRoute(builder: (context) => const ControlDevice())
             );
           }
           if (state is AuthError) {

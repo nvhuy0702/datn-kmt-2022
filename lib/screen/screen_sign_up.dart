@@ -31,9 +31,10 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          print('Huy Pham noi SignUp => ${state.runtimeType}');
           if (state is Authenticated) {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ScreenHome())
+            );
           }
           if (state is AuthError) {
             ScaffoldMessenger.of(context)

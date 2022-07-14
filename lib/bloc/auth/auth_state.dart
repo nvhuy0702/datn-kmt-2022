@@ -11,10 +11,9 @@ class Loading extends AuthState {
 
 // When the user is authenticated the state is changed to Authenticated.
 class Authenticated extends AuthState {
-  Authenticated({this.isSignIn});
-  final bool? isSignIn;
+  Authenticated();
   @override
-  List<Object?> get props => [isSignIn];
+  List<Object?> get props => [];
 }
 
 // This is the initial state of the bloc. When the user is not authenticated the state is changed to Unauthenticated.

@@ -40,16 +40,17 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           home:StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if(myAppPreferences.getBool('logIn') == true) {
-                  return ScreenHome();
-                }
-                if (snapshot.hasData) {
-                  return const ScreenHome();
-                }
-                return ScreenHome();
-              }),
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if(myAppPreferences.getBool('logIn') == true){
+                return const ScreenHome();
+              }
+              if (snapshot.hasData) {
+                return const ScreenHome();
+              }
+              return const ScreenHome();
+            },
+          ),
         ),
       ),
     );

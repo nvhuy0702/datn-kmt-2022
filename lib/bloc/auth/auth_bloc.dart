@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authRepository.signIn(
             email: event.email, password: event.password);
         myAppPreferences.setBool('logIn', true);
-        emit(Authenticated(isSignIn: true));
+        emit(Authenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());

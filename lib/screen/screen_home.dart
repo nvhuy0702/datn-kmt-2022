@@ -15,9 +15,10 @@ class ScreenHome extends StatefulWidget {
 
 class _ScreenHomeState extends State<ScreenHome> {
   int index = 0;
-
+  bool _isLogin = false;
   @override
   void initState() {
+    _isLogin = myAppPreferences.getBool('logIn') ?? false;
     super.initState();
   }
   @override
@@ -32,28 +33,27 @@ class _ScreenHomeState extends State<ScreenHome> {
               fontSize: 25
             ),
           ),
-          leading:  IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ControlDevice())
-                );
-              },
-              icon: const Image(
-                image: AssetImage('assets/images/control_device.png'),
-              )
-          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ScreenSignIn())
+                  );
+                  if(_isLogin){
+                    Navigator.push(context, MaterialPageRoute(builder: (_){
+                      return const ControlDevice();
+                    }));
+                    return;
+                  }
+                },
+                icon: const Image(
+                  image: AssetImage('assets/images/control_device.png'),
+                )
+            )
+          ],
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
-        body: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is UnAuthenticated) {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const ScreenSignIn()),
-                  (route) => false);
-            }
-          },
-          child: AirQuality(),
-        ));
+        body: const AirQuality());
   }
 }
