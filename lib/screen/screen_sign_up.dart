@@ -33,7 +33,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
         listener: (context, state) {
           if (state is Authenticated) {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ScreenHome())
+              MaterialPageRoute(builder: (_) => const ScreenSignIn())
             );
           }
           if (state is AuthError) {
