@@ -38,7 +38,8 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
       final lastKey = map.keys.last;
       log('lastKey ==> $lastKey');
       final subLastKey = (map[lastKey] as Map).keys.last;
-      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey ?? ''));
+      log('subLastKey ==> $subLastKey');
+      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey));
     });
   }
   void _register(DatabaseReference? ref) {
