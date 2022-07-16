@@ -68,7 +68,6 @@ class _ScreenInfoAccountState extends State<ScreenInfoAccount> {
                       text: '\n${auth.currentUser?.email}',
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
                         color: Colors.blue,
                         fontSize: 20
                       )

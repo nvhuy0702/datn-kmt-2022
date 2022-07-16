@@ -1,6 +1,7 @@
 import 'package:app_datn_2022/bloc/value/value_bloc.dart';
 import 'package:app_datn_2022/extension/to_name.dart';
 import 'package:app_datn_2022/model/aqi_datn.dart' as TripleH;
+import 'package:app_datn_2022/service/local_notification.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:intl/intl.dart';
@@ -20,10 +21,11 @@ class AirQuality extends StatefulWidget {
 class _AirQualityState extends State<AirQuality> {
   ValueBloc valueBloc = ValueBloc();
   final primaryColor = const Color(0xFFE0E0E0);
-  int valueAQI = 40;
-
+  int valueAQI = 35;
+  final localNotification = LocalNotifications();
   @override
   void initState() {
+    localNotification.initializing();
     valueBloc.init();
     super.initState();
   }
@@ -212,6 +214,9 @@ class _AirQualityState extends State<AirQuality> {
   Widget _value() {
     return Builder(
       builder: (context) {
+        if(valueAQI > 30) {
+          localNotification.showNotifications();
+        }
         return SizedBox(
           height: 100,
           width: 100,

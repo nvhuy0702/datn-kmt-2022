@@ -4,7 +4,6 @@ import 'package:app_datn_2022/screen/control_device.dart';
 import 'package:app_datn_2022/screen/screen_sign_in.dart';
 import 'package:app_datn_2022/widget/air_quality.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreenHome extends StatefulWidget {
 
