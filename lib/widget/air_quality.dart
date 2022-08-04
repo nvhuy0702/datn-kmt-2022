@@ -134,7 +134,7 @@ class _AirQualityState extends State<AirQuality> {
                       'GAS',
                       data[3].toDouble(),
                       TripleH.CO.initializeFromRange(value: 46000).color,
-                      'ppm'),
+                      'm3'),
                 ],
               ),
             ),

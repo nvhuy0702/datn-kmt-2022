@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as Math;
 import 'package:app_datn_2022/main.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -30,16 +31,30 @@ class ValueBloc extends Bloc<ValueEvent, ValueState> {
   Sink<List<double>> get sinkValue => showingSections.sink;
 
   void init() {
-    _tableRef.onValue.listen((event) {
+    _tableRef.onValue.listen((event) async{
       final map = (event.snapshot.value as Map);
-      log('map ==> $map');
-      map.forEach((key, value) {
-      });
+      log('map ==> ${ map}');
+
+
+
+
+
       final lastKey = map.keys.last;
       log('lastKey ==> $lastKey');
-      final subLastKey = (map[lastKey] as Map).keys.last;
-      log('subLastKey ==> $subLastKey');
-      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey));
+      final subLastKey = (map[lastKey] as Map).keys.map((e) => int.tryParse(e) ?? -1).reduce(Math.max);
+      log('easy game => $subLastKey');
+
+     print("hahahhahah => ${ (map[lastKey] as Map).values.map((e) => e['D10']).toList()}");
+
+      final data = await dbCurrent?.child(lastKey ?? 'n1').child(subLastKey.toString()).get();
+
+      final allValues = (data?.value as Map).values.cast<double>();
+      final average = allValues.reduce((value, element) => value + element) / allValues.length;
+
+      print("calculate => \n ${allValues.join("\n")} result => $average");
+
+
+      _register(dbCurrent?.child(lastKey ?? 'n1').child(subLastKey.toString()));
     });
   }
   void _register(DatabaseReference? ref) {
